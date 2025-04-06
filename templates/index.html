@@ -8,6 +8,13 @@
 <body>
   <h1>Roulette Game</h1>
   <div id="money-display">Money: $100</div>
+
+  <!-- Spinning Wheel Container -->
+  <div id="wheel-container">
+    <div id="wheel"></div>
+    <div id="pointer"></div>
+  </div>
+
   <!-- Bet amount selection -->
   <div id="bet-options">
     <button onclick="setBetAmount(1)">$1</button>
@@ -16,6 +23,7 @@
     <button onclick="setBetAmount(10)">$10</button>
     <span id="current-bet-amount">Current bet amount: $1</span>
   </div>
+
   <!-- Roulette table layout -->
   <div id="table-container">
     <div style="display: flex; justify-content: center;">
@@ -39,6 +47,7 @@
   <!-- Spin button -->
   <button id="spin-button" onclick="spinWheel()">Spin</button>
   <div id="result-display"></div>
+
   <script src="{{ url_for('static', filename='script.js') }}"></script>
   <script>
     // Generate the number grid when the page loads

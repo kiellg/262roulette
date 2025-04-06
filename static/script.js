@@ -28,20 +28,36 @@ function placeBet(betKey) {
 }
 
 function spinWheel() {
-  fetch('/api/spin', {
-    method: 'POST'
-  })
+  // Call the backend spin API
+  fetch('/api/spin', { method: 'POST' })
     .then(response => response.json())
     .then(data => {
-      let resultDisplay = document.getElementById("result-display");
-      let resultText = `Winning number: ${data.winning_number} (${data.winning_color})\n`;
-      data.results.forEach(r => {
-        resultText += r + "\n";
-      });
-      resultText += `Total winnings: $${data.total_win}`;
-      resultDisplay.innerText = resultText;
-      updateMoneyDisplay(data.money);
-      updateBetsDisplay({});
+      let winning_number = data.winning_number;
+      // European roulette order (including 0)
+      let rouletteOrder = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+      let index = rouletteOrder.indexOf(winning_number);
+      let segmentAngle = 360 / rouletteOrder.length;
+      // Calculate desired angle such that the winning segment's center is at top (pointer)
+      let desired = index * segmentAngle + segmentAngle/2;
+      let extraRotations = 5; // extra full spins for effect
+      let finalAngle = extraRotations * 360 + (360 - desired);
+
+      let wheel = document.getElementById("wheel");
+      // Apply the rotation (CSS transition handles the animation)
+      wheel.style.transform = `rotate(${finalAngle}deg)`;
+
+      // After the animation completes (4 seconds), update the result display
+      setTimeout(() => {
+        let resultDisplay = document.getElementById("result-display");
+        let resultText = `Winning number: ${data.winning_number} (${data.winning_color})\n`;
+        data.results.forEach(r => {
+          resultText += r + "\n";
+        });
+        resultText += `Total winnings: $${data.total_win}`;
+        resultDisplay.innerText = resultText;
+        updateMoneyDisplay(data.money);
+        updateBetsDisplay({});
+      }, 4000);
     });
 }
 
