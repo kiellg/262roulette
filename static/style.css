@@ -80,9 +80,10 @@ h1 {
 /* Number labels around the wheel */
 .wheel-number {
   position: absolute;
-  top: 50%;
   left: 50%;
-  transform-origin: center bottom;
+  top: 50%;
+  /* Set transform origin so that translation happens along the radius */
+  transform-origin: 0 -130px;
   color: #fff;
   font-weight: bold;
   font-size: 14px;
@@ -102,16 +103,15 @@ h1 {
   cursor: pointer;
 }
 
-/* Table container for zero + 3x12 grid */
+/* Table container for zero + numbers grid */
 #table-container {
   margin: 20px 0;
 }
 
-/* Zero + numbers row */
+/* Grid container for zero and numbers */
 #table-grid {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 10px;
 }
 
@@ -129,12 +129,18 @@ h1 {
   margin-right: 5px;
 }
 
-/* A 3x12 grid for 1-36, but we'll just place them with flex wrap */
+/* Use CSS Grid for the numbers 1-36 */
+#numbers-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 60px);
+  grid-gap: 2px;
+}
+
+/* Number cells */
 .number-cell {
   border: 1px solid #fff;
   width: 60px;
   height: 60px;
-  margin: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
