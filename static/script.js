@@ -86,10 +86,32 @@ function generateTable() {
   }
 }
 
+// Generate the wheel background with discrete segments (no gradient blending)
+function generateWheelBackground() {
+  let rouletteOrder = [
+    0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8,
+    23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12,
+    35, 3, 26
+  ];
+  let redSet = new Set([32, 19, 21, 25, 34, 27, 36, 30, 23, 5, 16, 1, 14, 9, 18, 7, 12, 3]);
+  let segments = [];
+  let segPercentage = 100 / rouletteOrder.length;
+
+  for (let i = 0; i < rouletteOrder.length; i++) {
+    let num = rouletteOrder[i];
+    let color = (num === 0) ? 'green' : (redSet.has(num) ? 'red' : 'black');
+    let start = i * segPercentage;
+    let end = (i + 1) * segPercentage;
+    segments.push(`${color} ${start}% ${end}%`);
+  }
+  let gradient = `conic-gradient(${segments.join(', ')})`;
+  document.getElementById("wheel").style.background = gradient;
+}
+
 // Create labels for each number around the wheel
 function generateWheelNumbers() {
   let wheel = document.getElementById("wheel");
-  // Standard European roulette order for the wheel
+  // Standard European roulette order
   let numbers = [
     0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8,
     23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12,
@@ -97,14 +119,14 @@ function generateWheelNumbers() {
   ];
   let segAngle = 360 / numbers.length;
 
-  // Position each number label around the wheel
   for (let i = 0; i < numbers.length; i++) {
+    // Adjust angle so that the label is centered in its segment
     let angle = i * segAngle + segAngle / 2;
     let label = document.createElement("div");
     label.className = "wheel-number";
     label.innerText = numbers[i];
-    // Rotate to the angle, translate outward, then rotate back so text is upright
-    label.style.transform = `rotate(${angle}deg) translate(0, -130px) rotate(-${angle}deg)`;
+    // Position label: rotate by angle, translate upward by 130px, then rotate back
+    label.style.transform = `rotate(${angle}deg) translateY(-130px) rotate(-${angle}deg)`;
     wheel.appendChild(label);
   }
 }

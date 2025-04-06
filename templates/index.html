@@ -19,7 +19,7 @@
       <div id="wheel-container">
         <!-- The spinning wheel itself -->
         <div id="wheel"></div>
-        <!-- The pointer at the top -->
+        <!-- The pointer at the bottom -->
         <div id="pointer"></div>
       </div>
     </div>
@@ -69,8 +69,9 @@
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 
   <script>
-    // Generate the table layout and the wheel numbers on page load
+    // Generate the table layout, wheel background, and wheel numbers on page load
     generateTable();
+    generateWheelBackground();
     generateWheelNumbers();
   </script>
 </body>

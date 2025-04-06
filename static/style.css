@@ -49,31 +49,20 @@ h1 {
   height: 100%;
   border: 5px solid #fff;
   border-radius: 50%;
-  background: conic-gradient(
-    red 0deg, black 9.72deg, red 19.44deg, black 29.16deg,
-    red 38.88deg, black 48.6deg, red 58.32deg, black 68.04deg,
-    red 77.76deg, black 87.48deg, red 97.2deg, black 106.92deg,
-    red 116.64deg, black 126.36deg, red 136.08deg, black 145.8deg,
-    red 155.52deg, black 165.24deg, red 174.96deg, black 184.68deg,
-    red 194.4deg, black 204.12deg, red 213.84deg, black 223.56deg,
-    red 233.28deg, black 243deg, red 252.72deg, black 262.44deg,
-    red 272.16deg, black 281.88deg, red 291.6deg, black 301.32deg,
-    red 311.04deg, black 320.76deg, red 330.48deg, black 340.2deg,
-    red 349.92deg, black 360deg
-  );
+  /* Background will be set dynamically via JS */
   transition: transform 4s ease-out;
 }
 
-/* Wheel pointer at the top center */
+/* Pointer positioned at the bottom center; arrow points down */
 #pointer {
   position: absolute;
-  top: -10px;
+  bottom: -10px;
   left: 50%;
   width: 0;
   height: 0;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-bottom: 20px solid yellow;
+  border-top: 20px solid yellow;
   transform: translateX(-50%);
 }
 
@@ -82,8 +71,8 @@ h1 {
   position: absolute;
   left: 50%;
   top: 50%;
-  /* Set transform origin so that translation happens along the radius */
-  transform-origin: 0 -130px;
+  /* Use the center as the transform origin */
+  transform-origin: center;
   color: #fff;
   font-weight: bold;
   font-size: 14px;
