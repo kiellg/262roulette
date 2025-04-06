@@ -1,0 +1,67 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #2b2b2b;
+  color: #fff;
+}
+h1 {
+  margin-top: 20px;
+}
+#money-display, #bets-display, #result-display {
+  margin: 10px;
+  font-size: 18px;
+}
+#bet-options button {
+  margin: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+}
+#table-container {
+  margin: 20px auto;
+  width: 400px;
+}
+.zero {
+  background-color: green;
+  border: 1px solid #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 120px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px;
+}
+.cell {
+  border: 1px solid #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px;
+}
+.red {
+  background-color: #d32f2f;
+}
+.black {
+  background-color: #424242;
+}
+.table-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 60px);
+  grid-gap: 5px;
+  margin-top: 10px;
+}
+.bet-area {
+  border: 1px solid #fff;
+  margin: 5px;
+  padding: 10px;
+  cursor: pointer;
+  display: inline-block;
+  min-width: 80px;
+  background-color: #3a3a3a;
+}

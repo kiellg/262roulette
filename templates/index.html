@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Roulette Game</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>Roulette Game</h1>
+  <div id="money-display">Money: $100</div>
+  <!-- Bet amount selection -->
+  <div id="bet-options">
+    <button onclick="setBetAmount(1)">$1</button>
+    <button onclick="setBetAmount(2)">$2</button>
+    <button onclick="setBetAmount(5)">$5</button>
+    <button onclick="setBetAmount(10)">$10</button>
+    <span id="current-bet-amount">Current bet amount: $1</span>
+  </div>
+  <!-- Roulette table layout -->
+  <div id="table-container">
+    <div style="display: flex; justify-content: center;">
+      <div class="zero" onclick="placeBet('0')">0</div>
+      <div class="table-grid" id="table-grid"></div>
+    </div>
+    <!-- Additional bet areas -->
+    <div style="margin-top: 10px;">
+      <div class="bet-area" onclick="placeBet('Red')">Red</div>
+      <div class="bet-area" onclick="placeBet('Black')">Black</div>
+      <div class="bet-area" onclick="placeBet('Odd')">Odd</div>
+      <div class="bet-area" onclick="placeBet('Even')">Even</div>
+      <div class="bet-area" onclick="placeBet('Low')">1-18</div>
+      <div class="bet-area" onclick="placeBet('High')">19-36</div>
+      <div class="bet-area" onclick="placeBet('1st12')">1st 12</div>
+      <div class="bet-area" onclick="placeBet('2nd12')">2nd 12</div>
+      <div class="bet-area" onclick="placeBet('3rd12')">3rd 12</div>
+    </div>
+  </div>
+  <div id="bets-display">Current bets: None</div>
+  <!-- Spin button -->
+  <button id="spin-button" onclick="spinWheel()">Spin</button>
+  <div id="result-display"></div>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
+    // Generate the number grid when the page loads
+    generateTable();
+  </script>
+</body>
+</html>
