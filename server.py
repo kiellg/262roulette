@@ -2,11 +2,10 @@ from flask import Flask, render_template, request, jsonify, session
 import random
 
 app = Flask(__name__)
-app.secret_key = 'key'
+app.secret_key = 'your_secret_key'  # Use a secure secret key in production
 
 # Define roulette colors (European style)
-red_numbers = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36}
-
+red_numbers = {1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36}
 
 @app.before_request
 def setup_game():
@@ -17,11 +16,9 @@ def setup_game():
     if 'current_bet_amount' not in session:
         session['current_bet_amount'] = 1
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 @app.route('/api/set_bet_amount', methods=['POST'])
 def set_bet_amount():
@@ -29,7 +26,6 @@ def set_bet_amount():
     bet_amount = data.get('bet_amount')
     session['current_bet_amount'] = bet_amount
     return jsonify({'current_bet_amount': bet_amount})
-
 
 @app.route('/api/place_bet', methods=['POST'])
 def place_bet():
@@ -46,7 +42,6 @@ def place_bet():
     session['bets'] = bets
     return jsonify({'money': money, 'bets': bets})
 
-
 @app.route('/api/spin', methods=['POST'])
 def spin():
     bets = session.get('bets', {})
@@ -60,7 +55,6 @@ def spin():
         winning_color = "Black"
     results = []
     total_win = 0
-
     for bet_key, bet_amount in bets.items():
         win = False
         multiplier = 0
@@ -69,34 +63,15 @@ def spin():
             if int(bet_key) == winning_number:
                 win = True
                 multiplier = 35
-        elif bet_key == "Red" and winning_color == "Red":
-            win = True
-            multiplier = 1
-        elif bet_key == "Black" and winning_color == "Black":
-            win = True
-            multiplier = 1
-        elif bet_key == "Odd" and winning_number != 0 and winning_number % 2 == 1:
-            win = True
-            multiplier = 1
-        elif bet_key == "Even" and winning_number != 0 and winning_number % 2 == 0:
-            win = True
-            multiplier = 1
-        elif bet_key == "Low" and 1 <= winning_number <= 18:
-            win = True
-            multiplier = 1
-        elif bet_key == "High" and 19 <= winning_number <= 36:
-            win = True
-            multiplier = 1
-        elif bet_key == "1st12" and 1 <= winning_number <= 12:
-            win = True
-            multiplier = 2
-        elif bet_key == "2nd12" and 13 <= winning_number <= 24:
-            win = True
-            multiplier = 2
-        elif bet_key == "3rd12" and 25 <= winning_number <= 36:
-            win = True
-            multiplier = 2
-
+        # Only outside bets remaining: Low and High
+        elif bet_key == "Low":
+            if 1 <= winning_number <= 18:
+                win = True
+                multiplier = 1
+        elif bet_key == "High":
+            if 19 <= winning_number <= 36:
+                win = True
+                multiplier = 1
         if win:
             winnings = bet_amount * multiplier
             money += winnings
@@ -104,9 +79,8 @@ def spin():
             results.append(f"Bet on {bet_key} won! Payout: ${winnings}")
         else:
             results.append(f"Bet on {bet_key} lost.")
-
     session['money'] = money
-    session['bets'] = {}  # Reset bets for the next round
+    session['bets'] = {}
     response = {
         'winning_number': winning_number,
         'winning_color': winning_color,
@@ -115,7 +89,6 @@ def spin():
         'money': money
     }
     return jsonify(response)
-
 
 if __name__ == '__main__':
     app.run(debug=True)

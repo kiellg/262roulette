@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Roulette Game (Horizontal Layout)</title>
+  <title>Roulette Game (Horizontal Layout with Ball Animation)</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -19,14 +19,17 @@
       <div id="wheel-container">
         <!-- The spinning wheel itself -->
         <div id="wheel"></div>
-        <!-- The pointer at the bottom -->
+        <!-- Ball container with ball element -->
+        <div id="ball-container">
+          <div class="ball"></div>
+        </div>
+        <!-- Pointer at the top center -->
         <div id="pointer"></div>
       </div>
     </div>
 
     <!-- Table Section -->
     <div id="table-section">
-
       <!-- Bet amount selection -->
       <div id="bet-options">
         <button onclick="setBetAmount(1)">$1</button>
@@ -45,17 +48,10 @@
           <div id="numbers-grid"></div>
         </div>
 
-        <!-- Outside bets row -->
+        <!-- Outside bets row: only Low and High remain -->
         <div id="outside-bets">
-          <div class="bet-area" onclick="placeBet('Red')">Red</div>
-          <div class="bet-area" onclick="placeBet('Black')">Black</div>
-          <div class="bet-area" onclick="placeBet('Odd')">Odd</div>
-          <div class="bet-area" onclick="placeBet('Even')">Even</div>
           <div class="bet-area" onclick="placeBet('Low')">1-18</div>
           <div class="bet-area" onclick="placeBet('High')">19-36</div>
-          <div class="bet-area" onclick="placeBet('1st12')">1st 12</div>
-          <div class="bet-area" onclick="placeBet('2nd12')">2nd 12</div>
-          <div class="bet-area" onclick="placeBet('3rd12')">3rd 12</div>
         </div>
       </div>
 
@@ -67,7 +63,6 @@
   </div>
 
   <script src="{{ url_for('static', filename='script.js') }}"></script>
-
   <script>
     // Generate the table layout, wheel background, and wheel numbers on page load
     generateTable();
