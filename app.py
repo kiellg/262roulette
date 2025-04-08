@@ -1,14 +1,16 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, request, jsonify, session, redirect
 import random
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Use a secure secret key in production
 
 # Define roulette colors (European style)
-red_numbers = {1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36}
+red_numbers = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36}
 
 @app.before_request
 def setup_game():
+    # Only initialize defaults if they are not set.
+    # (If you want money to reset on every refresh, use a reset route instead.)
     if 'money' not in session:
         session['money'] = 100
     if 'bets' not in session:
@@ -19,6 +21,11 @@ def setup_game():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/reset')
+def reset():
+    session.clear()
+    return redirect('/')
 
 @app.route('/api/set_bet_amount', methods=['POST'])
 def set_bet_amount():
@@ -58,20 +65,11 @@ def spin():
     for bet_key, bet_amount in bets.items():
         win = False
         multiplier = 0
-        # Straight number bet
+        # Evaluate only straight number bets
         if bet_key.isdigit():
             if int(bet_key) == winning_number:
                 win = True
                 multiplier = 35
-        # Only outside bets remaining: Low and High
-        elif bet_key == "Low":
-            if 1 <= winning_number <= 18:
-                win = True
-                multiplier = 1
-        elif bet_key == "High":
-            if 19 <= winning_number <= 36:
-                win = True
-                multiplier = 1
         if win:
             winnings = bet_amount * multiplier
             money += winnings

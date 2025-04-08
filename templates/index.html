@@ -10,6 +10,8 @@
 
   <!-- Displays player's money -->
   <div id="money-display">Money: $100</div>
+  <!-- Reset Game Button -->
+  <button onclick="window.location.href='/reset'">Reset Game</button>
 
   <!-- Main container: wheel on the left, table on the right -->
   <div id="game-container">
@@ -23,8 +25,6 @@
         <div id="ball-container">
           <div class="ball"></div>
         </div>
-        <!-- Pointer at the top center -->
-        <div id="pointer"></div>
       </div>
     </div>
 
@@ -47,12 +47,6 @@
           <!-- Numbers 1-36 grid -->
           <div id="numbers-grid"></div>
         </div>
-
-        <!-- Outside bets row: only Low and High remain -->
-        <div id="outside-bets">
-          <div class="bet-area" onclick="placeBet('Low')">1-18</div>
-          <div class="bet-area" onclick="placeBet('High')">19-36</div>
-        </div>
       </div>
 
       <!-- Bets & Spin -->
@@ -64,7 +58,7 @@
 
   <script src="{{ url_for('static', filename='script.js') }}"></script>
   <script>
-    // Generate the table layout, wheel background, and wheel numbers on page load
+    // Generate table, wheel background, and wheel numbers on page load
     generateTable();
     generateWheelBackground();
     generateWheelNumbers();

@@ -1,14 +1,11 @@
-let currentBetAmount = 1;
-
 // Set bet amount on the server
 function setBetAmount(amount) {
-  currentBetAmount = amount;
-  document.getElementById("current-bet-amount").innerText = `Current bet amount: $${amount}`;
   fetch('/api/set_bet_amount', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ bet_amount: amount })
   });
+  document.getElementById("current-bet-amount").innerText = `Current bet amount: $${amount}`;
 }
 
 // Place a bet on the server
@@ -29,30 +26,40 @@ function placeBet(betKey) {
     });
 }
 
-// Spin the wheel and animate it
+// Spin the wheel and animate the ball
 function spinWheel() {
   fetch('/api/spin', { method: 'POST' })
     .then(response => response.json())
     .then(data => {
-      // The winning number from the backend
-      let winning_number = data.winning_number;
       // Standard European roulette order
       let rouletteOrder = [
         0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8,
         23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12,
         35, 3, 26
       ];
-      let index = rouletteOrder.indexOf(winning_number);
+      let index = rouletteOrder.indexOf(data.winning_number);
       let segmentAngle = 360 / rouletteOrder.length;
-      // Calculate desired rotation so the winning segment lines up with the pointer
-      let extraRotations = 5;
-      let desiredAngle = index * segmentAngle + segmentAngle / 2;
-      let finalAngle = extraRotations * 360 + (360 - desiredAngle);
 
-      let wheel = document.getElementById("wheel");
-      wheel.style.transform = `rotate(${finalAngle}deg)`;
+      // Wheel rotation (clockwise)
+      let extraWheelRotations = 5;
+      let desiredWheelAngle = index * segmentAngle + segmentAngle / 2;
+      let finalWheelAngle = extraWheelRotations * 360 + (360 - desiredWheelAngle);
+      document.getElementById("wheel").style.transform = `rotate(${finalWheelAngle}deg)`;
 
-      // After the animation completes, update results
+      // Ball rotation: force it to always land at the top
+      let extraBallRotations = 8;
+      let finalBallAngle = extraBallRotations * 360; // Fixed so the ball lands at top
+      let ballContainer = document.getElementById("ball-container");
+      ballContainer.style.transition = "transform 4s ease-out";
+      ballContainer.style.transform = `translate(-50%, -50%) rotate(${finalBallAngle}deg)`;
+
+      // Trigger drop animation after spin finishes
+      setTimeout(() => {
+        let ball = document.querySelector('.ball');
+        ball.classList.add('drop');
+      }, 4000);
+
+      // After drop animation, update results and reset the ball
       setTimeout(() => {
         let resultDisplay = document.getElementById("result-display");
         let resultText = `Winning number: ${data.winning_number} (${data.winning_color})\n`;
@@ -63,11 +70,17 @@ function spinWheel() {
         resultDisplay.innerText = resultText;
         updateMoneyDisplay(data.money);
         updateBetsDisplay({});
-      }, 4000);
+
+        // Reset the ball container and remove the drop animation
+        ballContainer.style.transition = "none";
+        ballContainer.style.transform = "translate(-50%, -50%) rotate(0deg)";
+        let ball = document.querySelector('.ball');
+        ball.classList.remove('drop');
+      }, 5000);
     });
 }
 
-// Create the grid of numbers (1–36) for the table using a CSS Grid
+// Generate the table grid for numbers 1-36
 function generateTable() {
   let numbersGrid = document.getElementById("numbers-grid");
   let redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36];
@@ -86,7 +99,7 @@ function generateTable() {
   }
 }
 
-// Generate the wheel background with discrete segments (no gradient blending)
+// Generate the wheel background with discrete segments
 function generateWheelBackground() {
   let rouletteOrder = [
     0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8,
@@ -108,10 +121,9 @@ function generateWheelBackground() {
   document.getElementById("wheel").style.background = gradient;
 }
 
-// Create labels for each number around the wheel
+// Generate number labels around the wheel
 function generateWheelNumbers() {
   let wheel = document.getElementById("wheel");
-  // Standard European roulette order
   let numbers = [
     0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8,
     23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12,
@@ -120,21 +132,24 @@ function generateWheelNumbers() {
   let segAngle = 360 / numbers.length;
 
   for (let i = 0; i < numbers.length; i++) {
-    // Adjust angle so that the label is centered in its segment
     let angle = i * segAngle + segAngle / 2;
     let label = document.createElement("div");
     label.className = "wheel-number";
     label.innerText = numbers[i];
-    // Position label: rotate by angle, translate upward by 130px, then rotate back
-    label.style.transform = `rotate(${angle}deg) translateY(-130px) rotate(-${angle}deg)`;
+    // First center the label at the wheel's center,
+    // then rotate it by 'angle', translate it upward by 130px (adjust radius as needed),
+    // and finally rotate it back so that the text stays horizontal.
+    label.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translate(0, -130px) rotate(-${angle}deg)`;
     wheel.appendChild(label);
   }
 }
 
+// Update money display
 function updateMoneyDisplay(money) {
   document.getElementById("money-display").innerText = `Money: $${money}`;
 }
 
+// Update bets display
 function updateBetsDisplay(bets) {
   let betsDisplay = document.getElementById("bets-display");
   if (!bets || Object.keys(bets).length === 0) {

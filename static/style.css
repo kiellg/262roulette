@@ -51,19 +51,7 @@ h1 {
   border-radius: 50%;
   /* Background will be set dynamically via JS */
   transition: transform 4s ease-out;
-}
-
-/* Pointer positioned at the bottom center; arrow points down */
-#pointer {
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 20px solid yellow;
-  transform: translateX(-50%);
+  overflow: visible; /* Ensure children (e.g. numbers) are not clipped */
 }
 
 /* Number labels around the wheel */
@@ -76,6 +64,7 @@ h1 {
   color: #fff;
   font-weight: bold;
   font-size: 14px;
+  z-index: 10;  /* Ensure numbers appear above the wheel background */
 }
 
 /* Table Section */
@@ -146,7 +135,7 @@ h1 {
   background-color: #424242;
 }
 
-/* Outside bets row */
+/* Outside bets row (not used now) */
 #outside-bets {
   display: flex;
   flex-wrap: wrap;
@@ -168,4 +157,37 @@ h1 {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
+}
+
+@keyframes dropAnimation {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(80px);
+  }
+}
+
+.drop {
+  animation: dropAnimation 1s ease-out forwards;
+}
+
+/* Ball container: positioned at the center of the wheel */
+#ball-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  /* Transition for rotation is set dynamically in JS */
+}
+
+/* Ball element: positioned along the rim (adjust offset as needed) */
+.ball {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: white;
+  border-radius: 50%;
+  top: -140px;  /* Offset from the center to place near the rim */
+  left: -7.5px; /* Center the ball horizontally */
 }
